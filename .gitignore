@@ -17,7 +17,7 @@
 
 #datafiles
 *.xlsx
-*.csv
+
 
 #input folders
 orig/*
