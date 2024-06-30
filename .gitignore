@@ -9,6 +9,20 @@
 # User-specific files
 .Ruserdata
 
+# IGNORE EXTRAS
+#plots
+*.png
+*.pdf
+*.jpeg
+
+#datafiles
+*.xlsx
+*.csv
+
+#input folders
+orig/*
+
+
 # Example code in package build process
 *-Ex.R
 
