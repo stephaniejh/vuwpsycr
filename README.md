@@ -11,6 +11,7 @@
 6.  Exporting CSV files
 
 #### Part 2 - Plotting (+ playing around with the data) 
+#### Mainly using ggplot2, dplyr, readr, stringr, &  RColorBrewer, + base R pie()
 1. Find out how many animals share your name! (People name their dogs Stephanie but not their cats...)
 2. Bar Charts (top 10 cat & dog names)
 3. Pie graphs (proportion of unique animal breeds cats vs dogs)
