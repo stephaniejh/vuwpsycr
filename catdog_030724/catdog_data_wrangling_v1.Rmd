@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # SETUP - A MESS ATM - TO CLEAN UP!
+
 ### Load in Packages
 
 ```{r}
@@ -24,7 +25,7 @@ library(tidyr) #pivot_longer
 
 This code is for reading in multiple csv files at once. This way you don't have to call each one individually. Here we only show 2 files but you can use the same code to read in 100 or 1000 etc.
 
-1.  Set working directory as source file location. *Session > Set Working Directory > To source file location*
+1.  Set working directory as source file location. *Session \> Set Working Directory \> To source file location*
 
 2.  Determine the csv folder location (relative to script file location) & assign to `mydir`. Then list the files using `list.files` & read in anything with the .csv extension. Need `full.names = TRUE` to get proper location?
 
@@ -33,6 +34,7 @@ This code is for reading in multiple csv files at once. This way you don't have 
 Note if you wanted to read in excel files you would load the *readxl* package and change the pattern `"*.xlsx"` to & the function to `read_excel`
 
 Note to self! It seems that read.csv causes the extra space & extra column issue?
+
 ```{r}
 #1 - Set working directory to source file location
 
@@ -45,7 +47,6 @@ df_list <- setNames(lapply(myfiles, read_csv), myfiles)
 
 ```
 
-
 ### Combine the individual files into one master file
 
 ```{r}
@@ -57,7 +58,9 @@ summary(cdf)
 ```
 
 ## Tidy up data file
+
 ### Remove blank column,
+
 ```{r}
 #1 - remove the random blank column
 cdf_1 <- cdf %>% select(!(blank))
@@ -74,9 +77,10 @@ glimpse(cdf_2)
 
 ```
 
+### Replacing AND to & with `str_replace`
 
-https://sparkbyexamples.com/r-programming/replace-string-with-another-string-in-r/
-https://sparkbyexamples.com/r-programming/r-str-replace-to-replace-matched-patterns-in-a-string/
+<https://sparkbyexamples.com/r-programming/replace-string-with-another-string-in-r/> <https://sparkbyexamples.com/r-programming/r-str-replace-to-replace-matched-patterns-in-a-string/>
+
 ```{r}
 unique(cdf_2$colour)
 
@@ -102,7 +106,6 @@ cdf_4 %>%
   count(colour) %>%
   slice(1:10)
 ```
-
 
 ```{r}
 unique(cdf_4$type)
@@ -133,8 +136,6 @@ unique(cdf_6$colour)
 
 ```
 
-
-
 ```{r}
 
 
@@ -158,7 +159,6 @@ glimpse(cdf_7)
 
 ```
 
-
 ```{r}
 
 cdf_8 <- cdf_7 %>% 
@@ -169,14 +169,16 @@ glimpse(cdf_8)
 ```
 
 ### Export out the file
+
 ```{r}
 #write_csv(cdf_7, "cleaned_catdog_data_v1.csv")
 
 ```
 
-
 ## Pivot to long form
-Not actually that relevant for this dataset but is useful in other cases
+
+Not actually that relevant for this dataset but is useful in other cases. Here is some demo code on how to do it with out data.
+
 ```{r}
 long_df <- cdf_8 %>%
   select(!file_id) %>%
@@ -186,7 +188,6 @@ long_df <- cdf_8 %>%
 
 str(long_df)
 ```
-
 
 ```{r}
 #write_csv(long_df, "long_cleaned_catdog_data_v1.csv")

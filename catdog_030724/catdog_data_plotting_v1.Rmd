@@ -1,0 +1,89 @@
+---
+title: "catdog_data_plotting_v1"
+author: "Stephanie Huang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# SETUP
+
+### Load in Packages
+
+```{r}
+library(readr) # read_csv
+library(dplyr) #data wrangling
+library(ggplot2) #graphs
+library(stringr) # str_detect
+library(RColorBrewer) #scale_fill_brewer
+```
+
+
+### Read in the data
+```{r}
+#Set working directory to source file location 
+catdog <- read_csv("cleaned_catdog_data_v1.csv")
+
+```
+
+
+### Animals with your name?
+```{r}
+
+my_name <- catdog %>%
+  filter(name %in% c("Stephanie", "Steph", "Stephy",
+                     "Stephie", "Stefanie"))
+
+my_name_2 <- catdog %>%
+  filter(str_detect(name, "^Steph|^Stef"))
+
+```
+
+
+### Cat as cat Dog as dog
+```{r}
+catascat <- filter(catdog, breed == "Cat")
+dogasdog <- filter(catdog, breed == "Dog")
+
+```
+
+
+## Top cat & dog names
+### Names sorted by type
+```{r}
+nm_x_typ <- catdog %>%
+  group_by(type)
+
+```
+
+
+### extras
+#### Pie graph
+<https://www.learnbyexample.org/r-pie-chart-base-graph/>
+```{r}
+
+brd_x_typ <- catdog %>%
+  group_by(type) %>%
+  summarize(breeds = n_distinct(breed)) %>%
+  mutate(pct = breeds/sum(breeds) * 100)
+
+#round down to 2 
+brd_x_typ$pct <- signif(brd_x_typ$pct, 2)
+
+percent2plot <- paste(brd_x_typ$type, brd_x_typ$pct, "%")
+
+#pie chart
+pie(brd_x_typ$breeds, labels = percent2plot,
+    col = c("lightpink", "lightblue"),
+    main = "Percentage of unique breeds across animal type")
+
+```
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
