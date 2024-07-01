@@ -2,7 +2,7 @@
 
 ### 03 July 2024 (catdog_030724) 
 We will be working with some pet registration information from https://data.gov.au/search?q=pet+registration
-The files we will be using are located in *catdog_030724/input/animals* 
+The files we will be using are located in **catdog_030724/input/animals**
 #### Part 1 - Data import & wrangling 
 ##### Using packages readr, dplyr, stringr, & tidyr (from the tidyverse)
 1.  Batching importing CSVs files 
