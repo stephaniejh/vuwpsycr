@@ -88,7 +88,7 @@ plot(my_bar_plot)
 ```
 
 
-### Boxplots for animal age
+### Boxplots for animal age (cat vs dog)
 #### To add
 ```{r}
 #boxplots
