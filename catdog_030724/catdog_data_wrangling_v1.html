@@ -358,8 +358,10 @@ v1</h1>
 </div>
 
 
-<div id="setup" class="section level1">
-<h1>SETUP</h1>
+<div id="setup---a-mess-atm---to-clean-up" class="section level1">
+<h1>SETUP - A MESS ATM - TO CLEAN UP!</h1>
+<p><em>NOTE - THIS CODE IS NOT EFFICIENTLY WRITTEN BUT IS MEANT TO SHOW
+EACH PROCESS IN A STEP BY STEP MANNER!</em></p>
 <div id="load-in-packages" class="section level3">
 <h3>Load in Packages</h3>
 <pre class="r"><code>library(readr) #for read_csv</code></pre>
@@ -502,6 +504,9 @@ glimpse(cdf_2)</code></pre>
 ## $ sex     &lt;chr&gt; &quot;F&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;F&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M…
 ## $ suburb  &lt;chr&gt; &quot;BANNOCKBURN&quot;, &quot;BANNOCKBURN&quot;, &quot;BANNOCKBURN&quot;, &quot;BANNOCKBURN&quot;, &quot;B…
 ## $ age     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</code></pre>
+</div>
+<div id="replacing-and-to-with-str_replace" class="section level3">
+<h3>Replacing AND to &amp; with <code>str_replace</code></h3>
 <p><a href="https://sparkbyexamples.com/r-programming/replace-string-with-another-string-in-r/" class="uri">https://sparkbyexamples.com/r-programming/replace-string-with-another-string-in-r/</a>
 <a href="https://sparkbyexamples.com/r-programming/r-str-replace-to-replace-matched-patterns-in-a-string/" class="uri">https://sparkbyexamples.com/r-programming/r-str-replace-to-replace-matched-patterns-in-a-string/</a></p>
 <pre class="r"><code>unique(cdf_2$colour)</code></pre>
@@ -2543,7 +2548,7 @@ glimpse(cdf_8)</code></pre>
 <div id="pivot-to-long-form" class="section level2">
 <h2>Pivot to long form</h2>
 <p>Not actually that relevant for this dataset but is useful in other
-cases</p>
+cases. Here is some demo code on how to do it with out data.</p>
 <pre class="r"><code>long_df &lt;- cdf_8 %&gt;%
   select(!file_id) %&gt;%
   pivot_longer(cols = c(&#39;name&#39;:&#39;suburb&#39;),

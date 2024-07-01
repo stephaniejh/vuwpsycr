@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # SETUP - A MESS ATM - TO CLEAN UP!
+*NOTE - THIS CODE IS NOT EFFICIENTLY WRITTEN BUT IS MEANT TO SHOW EACH PROCESS IN A STEP BY STEP MANNER!*
 
 ### Load in Packages
 
