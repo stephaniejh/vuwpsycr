@@ -32,11 +32,12 @@ catdog <- read_csv("cleaned_catdog_data_v1.csv")
 
 ### Animals with your name?
 ```{r}
-
+#By specific cases
 my_name <- catdog %>%
   filter(name %in% c("Stephanie", "Steph", "Stephy",
                      "Stephie", "Stefanie"))
 
+#Starting with
 my_name_2 <- catdog %>%
   filter(str_detect(name, "^Steph|^Stef"))
 
@@ -55,13 +56,48 @@ dogasdog <- filter(catdog, breed == "Dog")
 ### Names sorted by type
 ```{r}
 nm_x_typ <- catdog %>%
-  group_by(type)
+  group_by(type) %>%
+  count(name, sort = TRUE) %>%
+  slice_max(n, n = 10)
+
+# #just to look at the silly uncommon names (2 pac the cat)
+# bot_nm_x_type <- catdog %>%
+#   group_by(type) %>%
+#   count(name, sort = TRUE) %>%
+#   filter(n <= 2)
+
+```
+
+### Make the bar plot
+```{r}
+bar_plot <- nm_x_typ %>%
+  filter(type == "Cat") %>%
+  ggplot(aes(x = reorder(name, n),
+             y = n,
+             fill = reorder(name, n)))
+
+my_bar_plot <- bar_plot +
+  geom_col(color = "grey10", alpha = 0.7) +
+  labs(x = "Name", y = "Number of Cats",
+       title = "Top 10 Cat Names") +
+  scale_fill_brewer(palette = "Spectral") +
+  coord_flip() +
+  theme_classic()
+
+plot(my_bar_plot)
+```
+
+
+### Boxplots for animal age
+#### To add
+```{r}
+#boxplots
 
 ```
 
 
-### extras
-#### Pie graph
+### Extras
+#### Pie graph (base R pie)
 <https://www.learnbyexample.org/r-pie-chart-base-graph/>
 ```{r}
 
@@ -82,8 +118,21 @@ pie(brd_x_typ$breeds, labels = percent2plot,
 
 ```
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+#### Pie graph 2 (ggplot)
+```{r}
+pcb <- catdog %>% 
+  filter(type == "Cat") %>%
+  count(breed, sort = TRUE) %>%
+  slice_max(n, n = 15) %>%
+  ggplot(aes(x = "", y = n, fill = breed))
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+p_pcb <- pcb +
+  geom_col(color = "grey10", alpha = 0.6) +
+  # geom_label(aes(label = n),
+  #            position = position_stack(vjust = 0.5),
+  #            show.legend = FALSE) +
+  coord_polar(theta = "y") +
+  theme_classic()
+  
+plot(p_pcb)
+```
