@@ -1,6 +1,8 @@
 # vuwpsycr
 
 ### 03 July 2024 (catdog_030724) 
+The files we will be using are located in input/animals 
+
 #### Part 1 - Data import & wrangling 
 ##### Using packages readr, dplyr, stringr, & tidyr (from the tidyverse)
 1.  Batching importing CSVs files 
