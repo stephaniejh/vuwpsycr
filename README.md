@@ -1,8 +1,7 @@
 # vuwpsycr
 
 ### 03 July 2024 (catdog_030724) 
-The files we will be using are located in input/animals 
-
+The files we will be using are located in *catdog_030724input/animals*
 #### Part 1 - Data import & wrangling 
 ##### Using packages readr, dplyr, stringr, & tidyr (from the tidyverse)
 1.  Batching importing CSVs files 
@@ -11,7 +10,6 @@ The files we will be using are located in input/animals
 4.  Recoding variables 
 5.  Converting wide form to long format
 6.  Exporting CSV files
-
 #### Part 2 - Plotting (+ playing around with the data) 
 ##### Using ggplot2, dplyr, readr, stringr, &  RColorBrewer, + base R pie()
 1. Find out how many animals share your name! (People name their dogs Stephanie but not their cats...)
