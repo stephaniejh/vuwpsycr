@@ -1,0 +1,193 @@
+---
+title: "Cat & Dog Names - Data Wrangling v1"
+author: "Stephanie Huang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# SETUP 
+### Load in Packages
+
+```{r}
+library(readr) #for read_csv
+library(dplyr) #data wrangling e.g. bind_rows %>%
+library(stringr) #working with strings e.g. str_replace
+library(tidyr) #pivot_longer
+
+```
+
+### Batch read in the data
+
+This code is for reading in multiple csv files at once. This way you don't have to call each one individually. Here we only show 2 files but you can use the same code to read in 100 or 1000 etc.
+
+1.  Set working directory as source file location. *Session > Set Working Directory > To source file location*
+
+2.  Determine the csv folder location (relative to script file location) & assign to `mydir`. Then list the files using `list.files` & read in anything with the .csv extension. Need `full.names = TRUE` to get proper location?
+
+3.  Batch read in csv files using the `SetNames` will add the file name to the dataframe, you can read it in with just `lapply(myfiles, read.csv)` but it won't have the original csv file retain as an extra column.
+
+Note if you wanted to read in excel files you would load the *readxl* package and change the pattern `"*.xlsx"` to & the function to `read_excel`
+
+Note to self! It seems that read.csv causes the extra space & extra column issue?
+```{r}
+#1 - Set working directory to source file location
+
+#2 - Determine directory & create a list of the files
+mydir = "input/animals" #data file location relative to current
+myfiles = list.files(path=mydir, pattern = "*.csv", full.names = TRUE) # lists out csv files
+
+#3 - Batch read in using lapply
+df_list <- setNames(lapply(myfiles, read_csv), myfiles)
+
+```
+
+
+### Combine the individual files into one master file
+
+```{r}
+cdf <- bind_rows(df_list, .id="file_id")
+
+glimpse(cdf)
+summary(cdf)
+
+```
+
+## Tidy up data file
+### Remove blank column,
+```{r}
+#1 - remove the random blank column
+cdf_1 <- cdf %>% select(!(blank))
+
+glimpse(cdf_1)
+
+
+#2 - rename column names
+cdf_2 <- cdf_1 %>% 
+  rename("type" = "animaltype",
+         "age" = "AgeYears")
+
+glimpse(cdf_2)
+
+```
+
+
+https://sparkbyexamples.com/r-programming/replace-string-with-another-string-in-r/
+https://sparkbyexamples.com/r-programming/r-str-replace-to-replace-matched-patterns-in-a-string/
+```{r}
+unique(cdf_2$colour)
+
+cdf_3 <- cdf_2 %>%
+  mutate(colour = str_replace_all(colour, "AND|and|And|&|,|/|\\.", " & "))
+
+unique(cdf_3$colour)
+
+cdf_4 <- cdf_3 %>%
+  mutate(across(c(1:7), str_squish)) #removes extra spaces aka squishes down 
+
+unique(cdf_4$colour)
+
+```
+
+```{r}
+#Another way to look at it
+cdf %>%
+  count(colour) %>%
+  slice(1:10)
+
+cdf_4 %>%
+  count(colour) %>%
+  slice(1:10)
+```
+
+
+```{r}
+unique(cdf_4$type)
+
+cdf_5 <- cdf_4 %>%
+  mutate(across(c(2:7), str_to_title))  #captilizes only the 1st letter of the word
+
+
+unique(cdf_5$type)
+unique(cdf_5$colour)
+
+colours_b4 <- cdf_5 %>%
+  count(colour) 
+
+cdf_6 <- cdf_5 %>%
+  mutate(colour = str_replace_all(colour, c(
+    "Blackwhite" = "Black & White",
+    "Blacktan" = "Black & Tan",
+    "Tanwhite" = "Tan & White",
+    "Gray" = "Grey",
+    "Balck" = "Black")))
+
+colours <- cdf_6 %>%
+  count(colour) %>%
+  slice(1:600)
+
+unique(cdf_6$colour)
+
+```
+
+
+
+```{r}
+
+
+```
+
+```{r}
+unique(cdf_6$type)
+unique(cdf_6$sex)
+unique(cdf_6$id)
+
+cdf_7 <- cdf_6 %>%
+  mutate(type = recode(type, "D" = "Dog")) %>% 
+  mutate(region = recode(file_id, 
+                     "input/animals/golden-plains-animal-registrations_v2.csv" =
+                     "Golden Plains",
+                     "input/animals/sunshinecoast_qld_animals_registered_v2.csv" =
+                     "Sunshine Coast"), .before = suburb)
+
+unique(cdf_7$type)
+glimpse(cdf_7)  
+
+```
+
+
+```{r}
+
+cdf_8 <- cdf_7 %>% 
+  mutate(animal_id = row_number(), .after = file_id)
+
+glimpse(cdf_8)
+
+```
+
+### Export out the file
+```{r}
+#write_csv(cdf_7, "cleaned_catdog_data_v1.csv")
+
+```
+
+
+## Pivot to long form
+Not actually that relevant for this dataset but is useful in other cases
+```{r}
+long_df <- cdf_8 %>%
+  select(!file_id) %>%
+  pivot_longer(cols = c('name':'suburb'),
+               names_to = 'measure',
+               values_to = 'value')
+
+str(long_df)
+```
+
+
+```{r}
+#write_csv(long_df, "long_cleaned_catdog_data_v1.csv")
+```
