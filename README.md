@@ -16,7 +16,8 @@ The files we will be using are located in ***catdog_030724/input/animals***
 1. Find out how many animals share your name! (People name their dogs Stephanie but not their cats...)
 2. Bar Charts (top 10 cat & dog names)
 3. Pie graphs (proportion of unique animal breeds cats vs dogs)
-4. Box plots with individual data points (cat vs dog ages) (to add)
+4. Box plots with individual data points (cat vs dog ages)
+5. Histograms (cat vs dog ages)
 
 
 
