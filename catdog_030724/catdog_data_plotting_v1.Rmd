@@ -89,14 +89,62 @@ plot(my_bar_plot)
 
 
 ### Boxplots for animal age (cat vs dog)
-#### To add
+#### 
+https://ggplot2.tidyverse.org/reference/ggtheme.html
+https://personal.sron.nl/~pault/
 ```{r}
-#boxplots
+# Kinda ugly:( has overplotted points even if filter by suburb
+#Orange - "#ffc99d"
+#display.brewer.all()
+
+box_plot <- catdog %>%
+  filter(region == "Sunshine Coast" & suburb == "Pelican Waters") %>%
+  ggplot(aes(x = type, y = age, fill = type))
+
+my_box_plot <- box_plot +
+  geom_boxplot(aes(fill = type), color = "grey10", alpha = 0.8, fatten = 1,
+               size = 0.5, width = 0.25, outlier.shape = NA,
+               position = position_dodge(width=0.7)) +
+  stat_summary(fun=mean, geom ="point", shape = 4,
+               size = 2, stroke = 0.5, color = "grey10",
+               position = position_dodge(width=0.7)) +
+  geom_point(color = "grey20", size = 1, shape = 1, alpha = 0.3,
+             position=position_jitterdodge(
+               dodge.width = 0.5, jitter.width = 0.25, jitter.height = 0.3)) +
+  scale_y_continuous(breaks=seq(0, 25, 5)) + # seq(lower, upper, divisions)
+  scale_x_discrete(labels=c("Meow", "Woof")) + #re-label x axis
+  scale_fill_manual(name = "Animal Type", #Legend Title
+                    values=alpha(c("#d6604d", "#4393c3", 0.9)),
+                    breaks=c("Cat", "Dog"), #in dataframe
+                    labels=c("Kitties", "Doggies"), #displayed
+                    guide = guide_legend(title.position = "top")) +
+   labs(y = 'Age (years)', x = 'Animal Type', 
+       title = 'The Age of Cats & Dogs',
+       subtitle ='in Pelican Waters, Sunshine Coast, Queensland, Australia' ) + #sets axis names & titles
+  theme_bw()
+
+
+plot(my_box_plot)
 
 ```
 
-
 ### Extras
+#### histogram + facet_wrap
+http://www.sthda.com/english/wiki/ggplot2-histogram-plot-quick-start-guide-r-software-and-data-visualization
+```{r}
+histo <- catdog %>%
+  filter(region == "Sunshine Coast") %>%
+  ggplot(aes(x = age, fill = type))
+
+my_histo <- histo +
+  geom_histogram(binwidth=1,
+                 color = "grey10", alpha = 0.7) +
+  facet_wrap(~type, ncol = 1, scales = "free") +
+  scale_fill_manual(values=c("#c2a5cf", "#fdb366"))
+
+plot(my_histo)
+```
+
 #### Pie graph (base R pie)
 <https://www.learnbyexample.org/r-pie-chart-base-graph/>
 ```{r}
