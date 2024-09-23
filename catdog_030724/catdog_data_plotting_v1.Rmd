@@ -25,7 +25,9 @@ library(RColorBrewer) #scale_fill_brewer
 ### Read in the data
 ```{r}
 #Set working directory to source file location 
-catdog <- read_csv("cleaned_catdog_data_v1.csv")
+#catdog <- read_csv("cleaned_catdog_data_v1.csv") #old
+catdog <- read_csv("cleaned_catdog_data_v2_cat.csv") # new with collapsed cat breeds 
+
 
 ```
 
@@ -125,8 +127,67 @@ my_box_plot <- box_plot +
 
 
 plot(my_box_plot)
+```
+
+#### Cat age by breed (boxplots)
+```{r}
+#calculate the top 10 cat breeds in sunshine coast (dataset with age info)
+# top_cats <- catdog %>%
+#   filter(type == "Cat" & region == "Sunshine Coast") %>%
+#   count(breed, sort = TRUE) %>%
+#   slice_max(n, n = 10)
+
+# top 2-11 (removes domestic short hair (top 1))
+top_cats <- catdog %>%
+  filter(type == "Cat" & region == "Sunshine Coast") %>%
+  count(breed, sort = TRUE) %>%
+  slice(2:11)
+
+#top 5 suburbs
+top_suburbs <- catdog %>%
+  filter(type == "Cat" & region == "Sunshine Coast") %>%
+  count(suburb, sort = TRUE) %>%
+  slice(1:5)
+
+#Filter those with age data (Sunshine Coast dataset) & cats only...
+  #then only the 10 cat breeds as calculated above
+  #& assign aesthetics, reordering the breed by age
+box_plot_cat <- catdog %>%
+  filter(region == "Sunshine Coast" & type == "Cat") %>%
+  filter(breed %in% top_cats$breed) %>%
+  filter(suburb %in% top_suburbs$suburb) %>%
+  ggplot(aes(x = reorder(breed, age), y = age, fill = reorder(breed, age)))
+
+my_box_plot_cat <- box_plot_cat +
+  geom_boxplot(aes(fill = reorder(breed, age)), color = "grey10", alpha = 0.8, fatten = 1,
+               size = 0.5, width = 0.25, outlier.shape = NA,
+               position = position_dodge(width=0.5)) +
+  stat_summary(fun=mean, geom ="point", shape = 4,
+               size = 2, stroke = 0.5, color = "grey10",
+               position = position_dodge(width=0.5)) +
+  geom_point(color = "grey20", size = 1, shape = 1, alpha = 0.4,
+             position=position_jitterdodge(
+               dodge.width = 0.5, jitter.width = 0.3, jitter.height = 0.3)) +
+  scale_fill_brewer(palette = "Spectral") + 
+  #facet_wrap(~suburb, ncol = 1) + #split by suburb
+  scale_y_continuous(breaks=seq(0, 25, 5)) + # seq(lower, upper, divisions)
+  #scale_x_discrete(labels=c("Meow", "Woof")) + #re-label x axis
+  # scale_fill_manual(name = "Animal Type", #Legend Title
+  #                   values=alpha(c("#d6604d", "#4393c3", 0.9)),
+  #                   breaks=c("Cat", "Dog"), #in dataframe
+  #                   labels=c("Kitties", "Doggies"), #displayed
+  #                   guide = guide_legend(title.position = "top")) +
+   labs(y = 'Age (years)', x = 'Cat Breed', 
+       title = 'The Age of Cats by Breed',
+       subtitle ='in Sunshine Coast, Queensland, Australia' ) + #sets axis names & titles
+  theme_bw()
+
+
+plot(my_box_plot_cat)
+
 
 ```
+
 
 ### Extras
 #### histogram + facet_wrap

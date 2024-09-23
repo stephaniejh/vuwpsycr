@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # SETUP - A MESS ATM - TO CLEAN UP!
 *NOTE - THIS CODE IS NOT EFFICIENTLY WRITTEN BUT IS MEANT TO SHOW EACH PROCESS IN A STEP BY STEP MANNER!*
 
+https://www.r-bloggers.com/2019/04/how-to-filter-in-r-a-detailed-introduction-to-the-dplyr-filter-function/
+
 ### Load in Packages
 
 ```{r}
@@ -135,19 +137,42 @@ colours <- cdf_6 %>%
 
 unique(cdf_6$colour)
 
-```
-
-```{r}
-
 
 ```
 
+
+#Cat Breed Recode
 ```{r}
-unique(cdf_6$type)
-unique(cdf_6$sex)
-unique(cdf_6$id)
+
+cdf_6 %>% 
+  filter(type == "Cat") %>%
+  count(breed, sort = TRUE) %>%
+  slice_max(n, n = 20)
+
 
 cdf_7 <- cdf_6 %>%
+  mutate(breed = str_replace_all(breed, c(
+    "Domsh" = "Domestic Short Hair",
+    "Dommh" = "Domestic Medium Hair",
+    "Domlh" = "Domestic Long Hair",
+    "Britshcat" = "British Cat",
+    "Russianbl" = "Russian Blue")))
+
+cat_breeds <- cdf_7 %>% 
+  filter(type == "Cat") %>%
+  count(breed, sort = TRUE) 
+
+
+
+
+```
+
+```{r}
+unique(cdf_7$type)
+unique(cdf_7$sex)
+unique(cdf_7$id)
+
+cdf_8 <- cdf_7 %>%
   mutate(type = recode(type, "D" = "Dog")) %>% 
   mutate(region = recode(file_id, 
                      "input/animals/golden-plains-animal-registrations_v2.csv" =
@@ -155,24 +180,24 @@ cdf_7 <- cdf_6 %>%
                      "input/animals/sunshinecoast_qld_animals_registered_v2.csv" =
                      "Sunshine Coast"), .before = suburb)
 
-unique(cdf_7$type)
-glimpse(cdf_7)  
+unique(cdf_8$type)
+glimpse(cdf_8)  
 
 ```
 
 ```{r}
 
-cdf_8 <- cdf_7 %>% 
+cdf_9 <- cdf_8 %>% 
   mutate(animal_id = row_number(), .after = file_id)
 
-glimpse(cdf_8)
+glimpse(cdf_9)
 
 ```
 
 ### Export out the file
 
 ```{r}
-#write_csv(cdf_7, "cleaned_catdog_data_v1.csv")
+#write_csv(cdf_9, "cleaned_catdog_data_v2_cat.csv")
 
 ```
 
@@ -181,7 +206,7 @@ glimpse(cdf_8)
 Not actually that relevant for this dataset but is useful in other cases. Here is some demo code on how to do it with out data.
 
 ```{r}
-long_df <- cdf_8 %>%
+long_df <- cdf_9 %>%
   select(!file_id) %>%
   pivot_longer(cols = c('name':'suburb'),
                names_to = 'measure',
