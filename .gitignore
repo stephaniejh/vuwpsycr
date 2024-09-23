@@ -1,3 +1,9 @@
+# R project
+*.Rproj
+
+# Data (ignores everything the data  output folder)
+output/*
+
 # History files
 .Rhistory
 .Rapp.history
